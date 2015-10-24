@@ -1,5 +1,7 @@
 
 local  ffi = require("ffi")
+local b = string.byte;
+local int = ffi.typeof("int")
 
 --[[
 /* Message byte order */
@@ -8,9 +10,13 @@ local  ffi = require("ffi")
 
 /** Protocol version. */
 #define DBUS_MAJOR_PROTOCOL_VERSION 1
+--]]
 
-/** Type code that is never equal to a legitimate type code */
-#define DBUS_TYPE_INVALID       ((int) '\0')
+-- Type code that is never equal to a legitimate type code
+DBUS_TYPE_INVALID = int(0);
+
+
+--[[
 /** #DBUS_TYPE_INVALID as a string literal instead of a int literal */
 #define DBUS_TYPE_INVALID_AS_STRING        "\0"
 
@@ -35,8 +41,12 @@ local  ffi = require("ffi")
 #define DBUS_TYPE_INT32         ((int) 'i')
 /** #DBUS_TYPE_INT32 as a string literal instead of a int literal */
 #define DBUS_TYPE_INT32_AS_STRING          "i"
-/** Type code marking a 32-bit unsigned integer */
-#define DBUS_TYPE_UINT32        ((int) 'u')
+--]]
+
+-- Type code marking a 32-bit unsigned integer
+DBUS_TYPE_UINT32 =int(b'u')
+
+--[[
 /** #DBUS_TYPE_UINT32 as a string literal instead of a int literal */
 #define DBUS_TYPE_UINT32_AS_STRING         "u"
 /** Type code marking a 64-bit signed integer */
@@ -51,8 +61,13 @@ local  ffi = require("ffi")
 #define DBUS_TYPE_DOUBLE        ((int) 'd')
 /** #DBUS_TYPE_DOUBLE as a string literal instead of a int literal */
 #define DBUS_TYPE_DOUBLE_AS_STRING         "d"
-/** Type code marking a UTF-8 encoded, nul-terminated Unicode string */
-#define DBUS_TYPE_STRING        ((int) 's')
+--]]
+
+-- Type code marking a UTF-8 encoded, nul-terminated Unicode string */
+DBUS_TYPE_STRING  = int(b's')
+
+
+--[[
 /** #DBUS_TYPE_STRING as a string literal instead of a int literal */
 #define DBUS_TYPE_STRING_AS_STRING         "s"
 /** Type code marking a D-Bus object path */

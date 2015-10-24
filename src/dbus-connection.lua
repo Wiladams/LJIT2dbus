@@ -1,4 +1,4 @@
-
+local ffi = require("ffi")
 
 require("dbus-errors")
 require("dbus-memory")
