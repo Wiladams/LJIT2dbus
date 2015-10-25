@@ -32,6 +32,15 @@ struct DBusError
 };
 ]]
 
+ffi.metatype(ffi.typeof("struct DBusError"),
+{
+    __index = {
+        init = function(self)
+            
+        end,
+    },
+});
+
 local function DBUS_ERROR_INIT()
   return ffi.new("struct DBusError", { NULL, NULL, TRUE, 0, 0, 0, 0, NULL });
 end
