@@ -23,7 +23,6 @@ LBusBus_mt = {
 function LBusBus.init(self, handle)
 	local obj = {
 		Handle = handle;
-		--Connection = LBusConnection:init(handle);
 	}
 	setmetatable(obj, LBusBus_mt);
 

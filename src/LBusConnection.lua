@@ -34,7 +34,7 @@ function LBusConnection.flush(self)
 end
 
 function LBusConnection.send(self, msg, client_serial)
-    local res = dbus.dbus_connection_send(self.Handle, msg, client_serial)
+    local res = dbus.dbus_connection_send(self.Handle, msg.Handle, client_serial)
 
 	return res == dbus.TRUE;
 end

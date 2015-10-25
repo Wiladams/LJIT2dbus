@@ -32,6 +32,8 @@ local fprintf = libc.fprintf;
 
 
 local LBusBus = require("LBusBus")
+local LBusMessage = require("LBusMessage")
+
 
 --[[ Symbolic defines for the D-Bus well-known name, interface, object
    path and method name that we're going to use. --]]
@@ -91,17 +93,18 @@ local function main(argc, argv)
 
 
   -- Message to display.
-  --local dispMsg = "Hello World!";
-  local dispMsg = ffi.new("char *[1]", libc.strdup("Hello World!"));
+  local dispMsg = "Hello World!";
+  --local dispMsg = ffi.new("char *[1]", libc.strdup("Hello World!"));
   --local dispMsg = libc.strdup("Hello World!");
 
   -- Text to use for the acknowledgement button. "" means default.
-  --local  buttonText = "";
-  local buttonText = ffi.new("char *[1]", libc.strdup(""));
+  local  buttonText = "";
+  --local buttonText = ffi.new("char *[1]", libc.strdup(""));
   --local buttonText = libc.strdup("");
 
 
-  local iconType = ffi.new("int[1]", 1)
+  --local iconType = ffi.new("int[1]", 1)
+  local iconType = 1;
 
   local err = dbus.DBusError();
   dbus.dbus_error_init(err);
@@ -120,26 +123,25 @@ local function main(argc, argv)
   --terminateOnError("Failed to check for name ownership\n", err);
 
   printf("Creating a message object\n");
+  local msg = LBusMessage:newMethodCall(SYSNOTE_NAME, SYSNOTE_OPATH, SYSNOTE_IFACE, SYSNOTE_NOTE);
+--[[
   local msg = dbus.dbus_message_new_method_call(SYSNOTE_NAME, -- destination
                                      SYSNOTE_OPATH,  -- obj. path
                                      SYSNOTE_IFACE,  -- interface
                                      SYSNOTE_NOTE); -- method str
+--]]
   if (msg == nil) then
     fprintf(stderr, "Ran out of memory when creating a message\n");
     error(EXIT_FAILURE);
   end
 
-  dbus.dbus_message_set_no_reply(msg, dbus.TRUE);
+  msg:setNoreply(true)
 
   printf("Appending arguments to the message\n");
-  if (dbus.dbus_message_append_args(msg,
-                                DBUS_TYPE_STRING, dispMsg,
-                                DBUS_TYPE_UINT32, iconType,
-                                DBUS_TYPE_STRING, buttonText,
-                                DBUS_TYPE_INVALID) == 0) then
-    fprintf(stderr, "Ran out of memory while constructing args\n");
-    exit(EXIT_FAILURE);
-  end
+  assert(msg:addArg(dispMsg));
+  assert(msg:addArg(buttonText));
+  assert(msg:addArg(iconType));
+  assert(msg:finishArgs());
 
   printf("Adding message to client's send-queue\n");
 
@@ -154,15 +156,9 @@ local function main(argc, argv)
   printf("Queue is now empty\n");
   printf("Cleaning up\n");
 
-  --[[ Free up the allocated message. Most D-Bus objects have internal
-     reference count and sharing possibility, so _unref() functions
-     are quite common. --]]
-  dbus.dbus_message_unref(msg);
-  msg = nil;
-
   printf("Quitting (success)\n");
 
-  return EXIT_SUCCESS;
+  return true;
 end
 
 main(#arg, arg)
