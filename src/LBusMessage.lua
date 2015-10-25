@@ -3,6 +3,8 @@ local ffi = require("ffi")
 local dbus = require("dbus")
 local libc = require("libc")
 
+local int = ffi.typeof("int")
+
 
 local LBusMessage = {}
 setmetatable(LBusMessage, {
@@ -47,28 +49,22 @@ function LBusMessage.setNoreply(self, istrue)
 	end		
 end
 
-function LBusMessage.finishArgs(self)
-	local res = dbus.dbus_message_append_args(self.Handle, DBUS_TYPE_INVALID);
-
-	return res == dbus.TRUE;
-end
-
 function LBusMessage.addArg(self, argValue, argType)
 	local bValue = dbus.DBusBasicValue()
 	local bType = nil;
 
 	if type(argValue) == "string" then
 		bValue.str = libc.strdup(argValue);
-		bType = DBUS_TYPE_STRING;
-		print("LBusMessage.addArg(string): ", argValue, bType)
+		bType = argType or DBUS_TYPE_STRING;
+		--print("LBusMessage.addArg(string): ", argValue, bType)
 	elseif type(argValue) == "number" then
 		bValue.u32 = argValue;
-		bType = DBUS_TYPE_UINT32;
+		bType = argType or DBUS_TYPE_UINT32;
 	else
 		return false;
 	end
 
-	local res = dbus.dbus_message_append_args(self.Handle, bType, bValue);
+	local res = dbus.dbus_message_append_args(self.Handle, bType, bValue, int(DBUS_TYPE_INVALID));
 
 	return res == dbus.TRUE;
 end
@@ -125,9 +121,6 @@ int         dbus_message_iter_get_element_type (DBusMessageIter *iter);
 
 void        dbus_message_iter_recurse          (DBusMessageIter *iter,
                                                 DBusMessageIter *sub);
-
-void        dbus_message_iter_get_basic        (DBusMessageIter *iter,
-                                                void            *value);
 --]]
 
 -- An iterator over the arguments that are currently
@@ -150,17 +143,24 @@ function LBusMessage.args(self)
 			return nil;
 		end
 
-		local str = dbus.dbus_message_iter_get_signature(param);
-		if str == nil then return nil end
-		str = ffi.string(str)
+		local argType = dbus.dbus_message_iter_get_arg_type(param)
+		--local str = dbus.dbus_message_iter_get_signature(param);
+		--if str == nil then return nil end
+		--str = ffi.string(str)
 		local value = nil;
 
-		if str == 's' then
+		if argType == DBUS_TYPE_STRING then
 			local valuep = ffi.new("char *[1]")
 			dbus.dbus_message_iter_get_basic(param, valuep);
 			if valuep[0] ~= nil then
 				value = ffi.string(valuep[0])
 			end
+		elseif argType == DBUS_TYPE_UINT32 then
+			local valuep=ffi.new("uint32_t[1]")
+			dbus.dbus_message_iter_get_basic(param, valuep);
+			value = valuep[0]
+		else
+			value = "UNKNOWN TYPE"
 		end
 
 		-- move the iterator to the next one before returning

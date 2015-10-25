@@ -20,11 +20,10 @@ print("Appending arguments to the message");
 assert(msg:addArg(dispMsg));
 assert(msg:addArg(buttonText));
 assert(msg:addArg(iconType));
-assert(msg:finishArgs());
 
 
-print("     msg.path(): ", msg:path())
-print("msg.interface(): ", msg:interface())
+print("     path: ", msg:path())
+print("interface: ", msg:interface())
 
 print("== ARGS ==")
 for _, anArg in msg:args() do 
