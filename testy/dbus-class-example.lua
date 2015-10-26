@@ -141,7 +141,7 @@ local function main(argc, argv)
   assert(msg:addArg(dispMsg));
   assert(msg:addArg(buttonText));
   assert(msg:addArg(iconType));
-  assert(msg:finishArgs());
+  
 
   printf("Adding message to client's send-queue\n");
 
