@@ -56,7 +56,7 @@ local function nil_gen()
 	return nil;
 end
 
-function LBusAddress.parseAddresses(str)
+function LBusAddress.parsedAddresses(self, str)
 	local entry = ffi.new("DBusAddressEntry **[1]")
 	local array_len = ffi.new("int [1]")
 	local err = dbus.DBusError();
