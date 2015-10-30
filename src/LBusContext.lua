@@ -26,4 +26,49 @@ function DBusContext.version(self)
 	return ver
 end
 
+function DBusContext.validatePath(self, path)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_path(path, err);
+
+	return res == dbus.TRUE;
+end
+
+function DBusContext.validateInterface(self, name)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_interface(name, err);
+
+	return res == dbus.TRUE;
+end
+
+function DBusContext.validateMember(self, name)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_member(name, err);
+
+	return res == dbus.TRUE;
+end
+
+function DBusContext.validateErrorName(self, name)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_error_name(name, err);
+
+	return res == dbus.TRUE;
+end
+
+function DBusContext.validateBusName(self, name)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_bus_name(name, err);
+
+	return res == dbus.TRUE;
+end
+
+function DBusContext.validateUtf8(self, alleged_utf8)
+	local err = dbus.DBusError();
+	local res = dbus.dbus_validate_utf8(alleged_utf8, err);
+
+	return res == dbus.TRUE;
+end
+
+
+
+
 return DBusContext

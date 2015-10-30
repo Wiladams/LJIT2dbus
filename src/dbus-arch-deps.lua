@@ -33,8 +33,8 @@ typedef short dbus_int16_t;
 typedef unsigned short dbus_uint16_t;
 ]]
 
-local function DBUS_INT64_CONSTANT(x) return int64_t(x) end
-local function DBUS_UINT64_CONSTANT(x) return uint64_t(x) end
+local function DBUS_INT64_CONSTANT(x) return Types.int64_t(x) end
+local function DBUS_UINT64_CONSTANT(x) return Types.uint64_t(x) end
 
 
 C.DBUS_MAJOR_VERSION = 1
