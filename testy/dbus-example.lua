@@ -112,10 +112,8 @@ local function main(argc, argv)
   dbus.dbus_error_init(err);
 
   printf("Connecting to Session D-Bus\n");
-  local bus, err = LBusBus(dbus.DBUS_BUS_SESSION);
-  --local bus = dbus.dbus_bus_get(dbus.DBUS_BUS_SESSION, err);
-  --terminateOnError("Failed to open Session bus\n", err);
-  assert(bus ~= nil);
+  local bus = dbus.dbus_bus_get(dbus.DBUS_BUS_SESSION, err);
+  terminateOnError("Failed to open Session bus\n", err);
 
   --[[ Normally one would just do the RPC call immediately without
      checking for name existence first. However, sometimes it's useful
