@@ -144,9 +144,6 @@ function LBusMessage.args(self)
 		end
 
 		local argType = dbus.dbus_message_iter_get_arg_type(param)
-		--local str = dbus.dbus_message_iter_get_signature(param);
-		--if str == nil then return nil end
-		--str = ffi.string(str)
 		local value = nil;
 
 		if argType == DBUS_TYPE_STRING then
